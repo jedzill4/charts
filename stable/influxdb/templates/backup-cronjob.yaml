@@ -92,4 +92,34 @@ spec:
                     name: {{ .Values.backup.azure.storageAccountSecret }}
                     key: connection-string
           {{- end }}
+          {{- if .Values.backup.s3 }}
+          - name: aws-cli
+            image: abdennour/aws
+            command:
+            - /bin/sh
+            args:
+            - '-c'
+            - |
+              aws --region="$REGION" s3 sync "$SRC_URL" "$DST_URL" 
+            volumeMounts:
+            - name: backups
+              mountPath: /backups
+            env:
+              - name: REGION
+                value: {{ .Values.backup.s3.region }}
+              - name: SRC_URL
+                value: /backups
+              - name: DST_URL
+                value: {{ .Values.backup.s3.destination }}
+              - name: AWS_ACCESS_KEY_ID
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.backup.s3.serviceAccountSecret }}
+                    key: AWS_ACCESS_KEY_ID
+              - name: AWS_SECRET_ACCESS_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.backup.s3.serviceAccountSecret }}
+                    key: AWS_SECRET_ACCESS_KEY
+          {{- end }}
 {{- end }}

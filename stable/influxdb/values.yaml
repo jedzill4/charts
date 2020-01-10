@@ -306,3 +306,10 @@ backup:
   #   storageAccountSecret: influxdb-backup-azure-key
   #   destination_container: influxdb-container
   #   destination_path: ""
+
+  ## AWS S3
+  ## Secret is expected to have string in `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
+  # s3:
+  #   region: us-east-2
+  #   serviceAccountSecret: s3-credentials
+  #   destination: s3://bucket/influxdb
